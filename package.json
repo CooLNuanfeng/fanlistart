@@ -1,0 +1,19 @@
+{
+  "name": "flstart",
+  "version": "1.0.0",
+  "description": "返利项目脚手架",
+  "main": "index.js",
+  "bin": {
+    "flstart": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0"
+  }
+}
