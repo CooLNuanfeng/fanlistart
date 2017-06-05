@@ -1,7 +1,7 @@
 {
   "name": "flstart",
   "version": "1.0.0",
-  "description": "返利项目脚手架",
+  "description": "返利项目简单脚手架工具",
   "main": "index.js",
   "bin": {
     "flstart": "./index.js"
