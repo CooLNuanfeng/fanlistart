@@ -13,7 +13,7 @@ program.command('create <branch> <name>')
     .option('-v, --vue','是否使用vue')
     .description('在对应分支生成项目的初始文件')
     .action(function(branch,name,options){
-        if(tool.DirTools.isExist(filePath.CURRENT_PATH+'/'+branch) && tool.DirTools.isExist(filePath.CURRENT_PATH+'/static') ){
+        if(tool.FileTools.isExist(branch) && tool.FileTools.isExist('static') ){
             var config = {
                 'branch' : branch,
                 'name' : name,
@@ -32,7 +32,7 @@ program.command('create <branch> <name>')
 program.on('--help',function(){
     console.log('Example: ');
     console.log('');
-    console.log('  $ flstart huodong lilibao -v -s');
+    console.log('  $ flstart create huodong lilibao -v -s');
     console.log('');
 });
 
@@ -45,8 +45,7 @@ if(!program.args.length){
 }
 
 function createPhpTpl(conf){
-    tool.DirTools.isExist(conf.path+'/'+conf.branch+'/Tpl/default') &&
-    tool.DirTools.mkDir(conf.path+'/'+conf.branch+'/Tpl/default/'+conf.name);
+    tool.FileTools.mkdirSync(conf.branch+'/Tpl/default/'+conf.name);
     var htmlContent = '';
     if(conf.vue){
         htmlContent = tool.FileTools.readFile(filePath.TPL_PATH+'/tpl-vue.html').toString();
@@ -54,7 +53,7 @@ function createPhpTpl(conf){
         htmlContent = tool.FileTools.readFile(filePath.TPL_PATH+'/tpl.html').toString();
     }
 
-    tool.FileTools.createFile(conf.path+'/'+conf.branch+'/Tpl/default/'+conf.name+'/index.html',htmlContent);
+    tool.FileTools.createFile(conf.branch+'/Tpl/default/'+conf.name+'/index.html',htmlContent);
 }
 
 
@@ -66,41 +65,40 @@ function createStatic(conf){
     var scssContent = tool.FileTools.readFile(filePath.TPL_PATH+'/style.scss').toString();
 
     if(conf.branch == 'huodong'){
-        tool.DirTools.isExist(conf.path+'/static/'+conf.branch) && tool.DirTools.mkDir(conf.path+'/static/'+conf.branch+'/'+conf.name)
-
-        tool.DirTools.mkDir(conf.path+'/static/'+conf.branch+'/'+conf.name+'/css');
-        tool.DirTools.mkDir(conf.path+'/static/'+conf.branch+'/'+conf.name+'/js');
-        tool.DirTools.mkDir(conf.path+'/static/'+conf.branch+'/'+conf.name+'/images');
+        var staticPath = 'static/'+conf.branch+'/'+conf.name;
+        tool.FileTools.mkdirSync(staticPath+'/css');
+        tool.FileTools.mkdirSync(staticPath+'/js');
+        tool.FileTools.mkdirSync(staticPath+'/images');
 
         if(conf.sass){
-            tool.FileTools.createFile(conf.path+'/static/'+conf.branch+'/'+conf.name+'/css/'+conf.name+'.scss',scssContent);
+            tool.FileTools.createFile(staticPath+'/css/'+conf.name+'.scss',scssContent);
         }else{
-            tool.FileTools.createFile(conf.path+'/static/'+conf.branch+'/'+conf.name+'/css/'+conf.name+'.css',cssContent);
+            tool.FileTools.createFile(staticPath+'/css/'+conf.name+'.css',cssContent);
         }
 
         if(conf.vue){
-            tool.FileTools.createFile(conf.path+'/static/'+conf.branch+'/'+conf.name+'/js/'+conf.name+'.js',vuejsContent);
+            tool.FileTools.createFile(staticPath+'/js/'+conf.name+'.js',vuejsContent);
         }else{
-            tool.FileTools.createFile(conf.path+'/static/'+conf.branch+'/'+conf.name+'/js/'+conf.name+'.js',jsContent);
+            tool.FileTools.createFile(staticPath+'/js/'+conf.name+'.js',jsContent);
         }
 
     }else{
         var file = conf.branch == 'mobile' ? 'webapp' : conf.branch;
-        tool.DirTools.isExist(conf.path+'/static/'+file+'/css') &&
-        tool.DirTools.mkDir(conf.path+'/static/'+file+'/css/'+conf.name);
-        tool.DirTools.isExist(conf.path+'/static/'+file+'/js') && tool.DirTools.mkDir(conf.path+'/static/'+file+'/js/'+conf.name);
-        tool.DirTools.isExist(conf.path+'/static/'+file+'/images') && tool.DirTools.mkDir(conf.path+'/static/'+file+'/images/'+conf.name);
+        var staticPath = 'static/'+file;
+        tool.FileTools.mkdirSync(staticPath+'/css/'+conf.name);
+        tool.FileTools.mkdirSync(staticPath+'/js/'+conf.name);
+        tool.FileTools.mkdirSync(staticPath+'/images/'+conf.name);
 
         if(conf.sass){
-            tool.FileTools.createFile(conf.path+'/static/'+file+'/css/'+conf.name+'/'+conf.name+'.scss',scssContent);
+            tool.FileTools.createFile(staticPath+'/css/'+conf.name+'/'+conf.name+'.scss',scssContent);
         }else{
-            tool.FileTools.createFile(conf.path+'/static/'+file+'/css/'+conf.name+'/'+conf.name+'.css',cssContent);
+            tool.FileTools.createFile(staticPath+'/css/'+conf.name+'/'+conf.name+'.css',cssContent);
         }
 
         if(conf.vue){
-            tool.FileTools.createFile(conf.path+'/static/'+file+'/js/'+conf.name+'/'+conf.name+'.js',vuejsContent);
+            tool.FileTools.createFile(staticPath+'/js/'+conf.name+'/'+conf.name+'.js',vuejsContent);
         }else{
-            tool.FileTools.createFile(conf.path+'/static/'+file+'/js/'+conf.name+'/'+conf.name+'.js',jsContent);
+            tool.FileTools.createFile(staticPath+'/js/'+conf.name+'/'+conf.name+'.js',jsContent);
         }
     }
 }
